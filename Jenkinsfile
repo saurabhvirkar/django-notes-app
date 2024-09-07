@@ -1,17 +1,13 @@
 pipeline {
-    
-    agent { 
+    agent {
         node{
             label "dev"
-            
         }
     }
-    
     stages{
         stage("Clone Code"){
             steps{
-                git url: "https://github.com/LondheShubham153/django-notes-app.git", branch: "main"
-                echo "Aaj toh LinkedIn Post bannta hai boss"
+                git url: "https://github.com/saurabhvirkar/django-notes-app.git", branch: "main"
             }
         }
         stage("Build & Test"){
@@ -19,12 +15,13 @@ pipeline {
                 sh "docker build . -t notes-app-jenkins:latest"
             }
         }
-        stage("Push to DockerHub"){
+        
+        stage ("Push to DockerHub")  {
             steps{
                 withCredentials(
                     [usernamePassword(
-                        credentialsId:"dockerCreds",
-                        passwordVariable:"dockerHubPass", 
+                        credentialsId:"dockerHubCreds", 
+                        passwordVariable:"dockerHubPass",
                         usernameVariable:"dockerHubUser"
                         )
                     ]
@@ -35,10 +32,9 @@ pipeline {
                 }
             }
         }
-        
         stage("Deploy"){
-            steps{
-                sh "docker compose up -d"
+            steps {
+                sh "docker compose down && docker compose up -d"
             }
         }
     }
