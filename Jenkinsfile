@@ -7,6 +7,7 @@ pipeline {
     stages{
         stage("Clone Code"){
             steps{
+                echo "Run from Github jenkinfile"
                 git url: "https://github.com/saurabhvirkar/django-notes-app.git", branch: "main"
             }
         }
